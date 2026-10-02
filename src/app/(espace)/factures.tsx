@@ -1,8 +1,10 @@
 /* ==========================================================================
    Mes factures
    --------------------------------------------------------------------------
+   Refonte : halo de la marque, le reste à payer en vedette sur une carte
+   haute, puis chaque facture en carte douce avec sa pastille payée/impayée.
    En haut, la seule information qui compte vraiment : ce qui reste à payer,
-   tous colis confondus. En dessous, le détail facture par facture.
+   tous colis confondus.
 
    Les montants sont lus tels quels dans la base : l'application ne recalcule
    jamais un prix. Une facture émise est une pièce comptable — si elle dit
@@ -10,13 +12,14 @@
    ========================================================================== */
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { mesFactures, surveiller, totaux } from '../../api/donnees';
 import type { Facture } from '../../api/supabase';
 import { useLangue } from '../../i18n';
 import { useTheme } from '../../design/useTheme';
-import { ESPACE } from '../../design/theme';
+import { ESPACE, ARRONDI } from '../../design/theme';
 import { Texte } from '../../design/composants/Texte';
 import { Carte } from '../../design/composants/Carte';
 import { Vide } from '../../design/composants/Vide';
@@ -30,10 +33,11 @@ export default function MesFactures() {
   const [chargement, setChargement] = useState(true);
   const [rafraichit, setRafraichit] = useState(false);
 
-  const charger = useCallback(async () => {
-    try { setFactures(await mesFactures()); }
-    catch { /* la liste précédente reste affichée plutôt qu'un écran vide */ }
-    finally { setChargement(false); setRafraichit(false); }
+  const charger = useCallback(() => {
+    mesFactures()
+      .then(setFactures)
+      .catch(() => { /* la liste précédente reste affichée plutôt qu'un écran vide */ })
+      .finally(() => { setChargement(false); setRafraichit(false); });
   }, []);
 
   useEffect(() => { charger(); }, [charger]);
@@ -58,10 +62,11 @@ export default function MesFactures() {
 
   return (
     <View style={{ flex: 1, backgroundColor: c.fond }}>
+      <LinearGradient colors={[...c.halo]} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 320 }} />
       <FlatList
         data={factures}
         keyExtractor={(f) => f.id}
-        contentContainerStyle={{ padding: ESPACE.xl, paddingTop: bords.top + ESPACE.l, paddingBottom: ESPACE.xxxl }}
+        contentContainerStyle={{ padding: ESPACE.xl, paddingTop: bords.top + ESPACE.l, paddingBottom: 140 }}
         refreshControl={
           <RefreshControl refreshing={rafraichit} onRefresh={() => { setRafraichit(true); charger(); }}
             tintColor={c.accent} colors={[c.accent]} />
@@ -76,7 +81,7 @@ export default function MesFactures() {
                 </Texte>
                 <Texte
                   variante="titreXL"
-                  style={{ marginTop: 6, color: duTotal > 0 ? c.accent : c.succes }}
+                  style={{ marginTop: 6, color: duTotal > 0 ? c.lien : c.succes }}
                 >
                   {argent(duTotal, devise)}
                 </Texte>
@@ -87,6 +92,7 @@ export default function MesFactures() {
         ListEmptyComponent={<Vide titre={t('aucuneFacture')} detail={t('aucuneFactureDetail')} icone="🧾" />}
         renderItem={({ item }) => {
           const T = totaux(item);
+          const teinte = T.reglee ? c.statuts.livre : c.statuts.action;
           return (
             <Carte style={{ marginBottom: ESPACE.m }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -95,13 +101,11 @@ export default function MesFactures() {
                   <Texte variante="titre" style={{ marginTop: 4 }}>{argent(T.grandTotal, item.devise)}</Texte>
                 </View>
                 <View style={{
-                  backgroundColor: T.reglee ? c.statuts.livre.fond : c.statuts.action.fond,
-                  borderColor: T.reglee ? c.statuts.livre.trait : c.statuts.action.trait,
-                  borderWidth: 1, borderRadius: 999, paddingVertical: 4.5, paddingHorizontal: ESPACE.m,
+                  backgroundColor: teinte.fond,
+                  borderRadius: ARRONDI.rond,
+                  paddingVertical: 5, paddingHorizontal: ESPACE.m,
                 }}>
-                  <Texte variante="petit" style={{
-                    color: T.reglee ? c.statuts.livre.texte : c.statuts.action.texte, fontSize: 12.5,
-                  }}>
+                  <Texte variante="petit" style={{ color: teinte.texte, fontSize: 12 }}>
                     {T.reglee ? t('payee') : t('impayee')}
                   </Texte>
                 </View>

@@ -11,9 +11,8 @@ export function Vide({ titre, detail, icone = '📦' }: { titre: string; detail:
   return (
     <View style={{ alignItems: 'center', paddingVertical: ESPACE.xxxl * 1.5, paddingHorizontal: ESPACE.xl }}>
       <View style={{
-        width: 76, height: 76, borderRadius: 38, backgroundColor: c.surfaceHaut,
+        width: 76, height: 76, borderRadius: 38, backgroundColor: c.pastille,
         alignItems: 'center', justifyContent: 'center', marginBottom: ESPACE.xl,
-        borderWidth: 1, borderColor: c.bordure,
       }}>
         <Texte style={{ fontSize: 32 }}>{icone}</Texte>
       </View>

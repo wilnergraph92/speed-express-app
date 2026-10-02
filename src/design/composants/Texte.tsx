@@ -30,7 +30,9 @@ export function Texte({ variante = 'corps', ton = 'normal', style, ...reste }: P
   const { c } = useTheme();
   const couleur = ton === 'doux' ? c.texteDoux
     : ton === 'faible' ? c.texteFaible
-    : ton === 'accent' ? c.accent
+    /* Le rouge « accent » en texte passe par c.lien : assez contrasté pour
+       rester lisible, dans les deux thèmes. */
+    : ton === 'accent' ? c.lien
     : ton === 'inverse' ? c.accentTexte
     : c.texte;
   return <Text {...reste} style={[STYLES[variante], { color: couleur }, style]} />;

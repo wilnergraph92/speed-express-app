@@ -28,6 +28,8 @@ const textes = {
 
     /* Connexion */
     bonjour: 'Bon retour', sousTitreConnexion: 'Suivez vos colis en direct.',
+    connectezCompte: 'Connectez-vous à votre compte Speed Express',
+    emailRequis: 'Saisissez d’abord votre adresse e-mail.',
     email: 'Adresse e-mail', motDePasse: 'Mot de passe',
     seConnecter: 'Se connecter', creerCompte: 'Créer un compte',
     pasDeCompte: 'Pas encore de compte ?', dejaUnCompte: 'Déjà un compte ?',
@@ -48,6 +50,9 @@ const textes = {
     parcours: 'Parcours', misAJour: 'Mis à jour', enregistreLe: 'Enregistré le',
     aucunResultat: 'Aucun colis ne correspond',
     etape: 'Étape', surQuatre: 'sur 4',
+    suivi: 'Suivi', numColis: 'N° de suivi', copierNumero: 'Copier le numéro',
+    recents: 'Envois récents',
+    statut: 'Statut', de: 'De', vers: 'À', suiviEnDirect: 'Suivi en direct',
 
     /* Statuts — repris du site, mot pour mot */
     confirme: 'Confirmé', expedie: 'Expédié', disponible: 'Disponible',
@@ -82,6 +87,8 @@ const textes = {
     copie: 'Copied',
 
     bonjour: 'Welcome back', sousTitreConnexion: 'Track your packages live.',
+    connectezCompte: 'Sign in to your Speed Express account',
+    emailRequis: 'Enter your email address first.',
     email: 'Email address', motDePasse: 'Password',
     seConnecter: 'Sign in', creerCompte: 'Create account',
     pasDeCompte: 'No account yet?', dejaUnCompte: 'Already have an account?',
@@ -101,6 +108,9 @@ const textes = {
     parcours: 'Journey', misAJour: 'Updated', enregistreLe: 'Registered on',
     aucunResultat: 'No package matches',
     etape: 'Step', surQuatre: 'of 4',
+    suivi: 'Tracking', numColis: 'Tracking number', copierNumero: 'Copy number',
+    recents: 'Recent shipments',
+    statut: 'Status', de: 'From', vers: 'To', suiviEnDirect: 'Live tracking',
 
     confirme: 'Confirmed', expedie: 'Shipped', disponible: 'Available',
     livre: 'Delivered', action: 'Action required',
@@ -132,6 +142,8 @@ const textes = {
     copie: 'Copiado',
 
     bonjour: 'Bienvenido de nuevo', sousTitreConnexion: 'Siga sus paquetes en vivo.',
+    connectezCompte: 'Inicie sesión en su cuenta Speed Express',
+    emailRequis: 'Introduzca primero su correo electrónico.',
     email: 'Correo electrónico', motDePasse: 'Contraseña',
     seConnecter: 'Iniciar sesión', creerCompte: 'Crear cuenta',
     pasDeCompte: '¿Aún no tiene cuenta?', dejaUnCompte: '¿Ya tiene una cuenta?',
@@ -151,6 +163,9 @@ const textes = {
     parcours: 'Recorrido', misAJour: 'Actualizado', enregistreLe: 'Registrado el',
     aucunResultat: 'Ningún paquete coincide',
     etape: 'Etapa', surQuatre: 'de 4',
+    suivi: 'Seguimiento', numColis: 'N.º de seguimiento', copierNumero: 'Copiar el número',
+    recents: 'Envíos recientes',
+    statut: 'Estado', de: 'De', vers: 'A', suiviEnDirect: 'Seguimiento en vivo',
 
     confirme: 'Confirmado', expedie: 'Enviado', disponible: 'Disponible',
     livre: 'Entregado', action: 'Acción requerida',
@@ -182,6 +197,8 @@ const textes = {
     copie: 'Kopye',
 
     bonjour: 'Byenveni ankò', sousTitreConnexion: 'Swiv kolis ou yo an dirèk.',
+    connectezCompte: 'Konekte nan kont Speed Express ou',
+    emailRequis: 'Antre adrès imèl ou anvan.',
     email: 'Adrès imèl', motDePasse: 'Modpas',
     seConnecter: 'Konekte', creerCompte: 'Kreye yon kont',
     pasDeCompte: 'Ou poko gen kont ?', dejaUnCompte: 'Ou gen yon kont deja ?',
@@ -201,6 +218,9 @@ const textes = {
     parcours: 'Pakou', misAJour: 'Mete ajou', enregistreLe: 'Anrejistre le',
     aucunResultat: 'Pa gen kolis ki koresponn',
     etape: 'Etap', surQuatre: 'sou 4',
+    suivi: 'Swivi', numColis: 'Nimewo swivi', copierNumero: 'Kopye nimewo a',
+    recents: 'Dènye anbwa yo',
+    statut: 'Estati', de: 'Soti', vers: 'Ale', suiviEnDirect: 'Swivi an dirèk',
 
     confirme: 'Konfime', expedie: 'Voye', disponible: 'Disponib',
     livre: 'Livre', action: 'Aksyon nesesè',

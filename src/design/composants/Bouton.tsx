@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, ActivityIndicator, View, type ViewStyle } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { ARRONDI, ESPACE } from '../theme';
+import { ARRONDI, ESPACE, ombre } from '../theme';
 import { useTheme } from '../useTheme';
 import { Texte } from './Texte';
 
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export function Bouton({ titre, surPression, variante = 'plein', occupe, inactif, style }: Props) {
-  const { c } = useTheme();
+  const { c, sombre } = useTheme();
   const eteint = inactif || occupe;
 
   const fonds = {
@@ -41,6 +41,9 @@ export function Bouton({ titre, surPression, variante = 'plein', occupe, inactif
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 52,
+        /* Le bouton plein flotte légèrement sur le fond clair, comme les
+           éléments hauts de la maquette. */
+        ...(variante === 'plein' && !sombre ? ombre(c) : {}),
         opacity: eteint ? 0.5 : pressed ? 0.85 : 1,
         transform: [{ scale: pressed && !eteint ? 0.985 : 1 }],
       }, style]}

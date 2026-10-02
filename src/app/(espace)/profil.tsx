@@ -1,13 +1,15 @@
 /* ==========================================================================
    Profil — compte, langue, notifications
    --------------------------------------------------------------------------
-   Peu de réglages, et aucun qui ne serve. Le choix de la langue est ici
-   parce qu'il change tout l'écran : le client le trouve là où il s'attend
-   à le trouver, pas caché dans un menu.
+   Refonte : halo de la marque, cartes douces, langues en pilules dont la
+   choisie est rouge pleine. Peu de réglages, et aucun qui ne serve. Le choix
+   de la langue est ici parce qu'il change tout l'écran : le client le trouve
+   là où il s'attend à le trouver, pas caché dans un menu.
    ========================================================================== */
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Pressable, Switch, Linking, Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import Constants from 'expo-constants';
 
@@ -66,7 +68,8 @@ export default function Profil() {
 
   return (
     <View style={{ flex: 1, backgroundColor: c.fond }}>
-      <ScrollView contentContainerStyle={{ padding: ESPACE.xl, paddingTop: bords.top + ESPACE.l, paddingBottom: ESPACE.xxxl }}>
+      <LinearGradient colors={[...c.halo]} style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 300 }} />
+      <ScrollView contentContainerStyle={{ padding: ESPACE.xl, paddingTop: bords.top + ESPACE.l, paddingBottom: 140 }}>
         <Texte variante="titreXL" style={{ marginBottom: ESPACE.xl }}>{t('profil')}</Texte>
 
         {/* Le compte */}
@@ -108,7 +111,7 @@ export default function Profil() {
                   style={{
                     paddingVertical: 9, paddingHorizontal: ESPACE.l,
                     borderRadius: ARRONDI.rond,
-                    backgroundColor: choisie ? c.accent : c.surfaceHaut,
+                    backgroundColor: choisie ? c.accent : c.surface,
                     borderWidth: 1, borderColor: choisie ? c.accent : c.bordure,
                   }}
                 >

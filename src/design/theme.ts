@@ -5,10 +5,12 @@
    n'est écrit en dur dans les écrans : une valeur changée ici se propage
    partout, et les deux thèmes restent cohérents entre eux.
 
-   Le thème sombre est le thème de référence. Un client qui suit un colis le
-   fait souvent le soir, dehors, d'un coup d'œil : le fond très sombre fait
-   ressortir le rouge de la marque et économise la batterie sur les écrans
-   OLED. Le thème clair existe quand même, parce que le téléphone décide.
+   La refonte suit la maquette de référence (fond clair aéré, halo dégradé en
+   haut d'écran, cartes très arrondies, pastilles de statut, barre d'onglets
+   flottante) mais avec les couleurs officielles du logo : le rouge
+   #E8121B tient la place que le bleu occupe dans la maquette, l'anthracite
+   et le blanc font le reste. Le thème clair est la référence visuelle ; le
+   thème sombre en est la traduction de nuit.
    ========================================================================== */
 
 /* Les couleurs de la marque, identiques à celles du site et des factures. */
@@ -36,27 +38,66 @@ type JeuDeCouleurs = {
   bordure: string; bordureFranche: string;
   texte: string; texteDoux: string; texteFaible: string;
   accent: string; accentTexte: string; accentDoux: string;
+  /* Le rouge quand il est utilisé EN TEXTE sur fond clair/sombre : une teinte
+     assez foncée (clair) ou assez claire (sombre) pour rester lisible. */
+  lien: string;
   succes: string; alerte: string;
+  /* Le cercle doux derrière les pictos, comme les pastilles de la maquette. */
+  pastille: string;
+  /* Le halo dégradé posé en haut des écrans, signature visuelle de la refonte. */
+  halo: [string, string, string];
   statuts: Record<Statut, { fond: string; trait: string; texte: string }>;
   ombre: string;
 };
 
-/* Thème sombre — la référence. */
+/* Thème clair — la référence de la refonte. */
+const clair: JeuDeCouleurs = {
+  fond: '#F6F7F9',
+  fondHaut: '#FFFFFF',
+  surface: '#FFFFFF',
+  surfaceHaut: '#FFFFFF',
+  bordure: 'rgba(11,12,14,.08)',
+  bordureFranche: 'rgba(11,12,14,.16)',
+  texte: '#101318',
+  texteDoux: '#4F5865',
+  texteFaible: '#667085',
+  accent: MARQUE.rouge,
+  accentTexte: '#FFFFFF',
+  accentDoux: 'rgba(232,18,27,.10)',
+  lien: '#C00E15',
+  succes: '#0B7A19',
+  alerte: '#B45309',
+  pastille: 'rgba(232,18,27,.08)',
+  halo: ['rgba(232,18,27,.16)', 'rgba(232,18,27,.05)', 'transparent'],
+  ombre: '#0B0C0E',
+  statuts: {
+    confirme:   { fond: 'rgba(26,46,210,.10)', trait: 'rgba(26,46,210,.25)', texte: '#1A2ED2' },
+    expedie:    { fond: 'rgba(32,36,42,.08)',  trait: 'rgba(32,36,42,.20)',  texte: '#20242A' },
+    disponible: { fond: 'rgba(19,192,44,.12)', trait: 'rgba(19,192,44,.30)', texte: '#0B7A19' },
+    livre:      { fond: 'rgba(11,122,25,.10)', trait: 'rgba(11,122,25,.28)', texte: '#0B7A19' },
+    action:     { fond: 'rgba(232,18,27,.10)', trait: 'rgba(232,18,27,.28)', texte: '#B60D14' },
+  },
+};
+
+/* Thème sombre — la même composition, version nuit. */
 const sombre: JeuDeCouleurs = {
   fond: '#08090B',
-  fondHaut: '#0E1013',
+  fondHaut: '#101317',
   surface: '#131619',
   surfaceHaut: '#1B1F24',
   bordure: 'rgba(255,255,255,.07)',
-  bordureFranche: 'rgba(255,255,255,.14)',
+  bordureFranche: 'rgba(255,255,255,.16)',
   texte: '#F4F5F7',
   texteDoux: '#A3ABB8',
-  texteFaible: '#6B7482',
+  texteFaible: '#8A93A3',
   accent: MARQUE.rouge,
   accentTexte: '#FFFFFF',
-  accentDoux: 'rgba(232,18,27,.14)',
+  accentDoux: 'rgba(232,18,27,.16)',
+  lien: MARQUE.rougeClair,
   succes: '#2FD04A',
   alerte: '#FFB020',
+  pastille: 'rgba(232,18,27,.14)',
+  halo: ['rgba(232,18,27,.22)', 'rgba(232,18,27,.07)', 'transparent'],
   ombre: '#000000',
   statuts: {
     confirme:   { fond: 'rgba(90,120,255,.14)', trait: 'rgba(90,120,255,.34)', texte: '#8FA6FF' },
@@ -64,32 +105,6 @@ const sombre: JeuDeCouleurs = {
     disponible: { fond: 'rgba(47,208,74,.14)',  trait: 'rgba(47,208,74,.36)',  texte: '#5CE07A' },
     livre:      { fond: 'rgba(47,208,74,.10)',  trait: 'rgba(47,208,74,.26)',  texte: '#3FBF58' },
     action:     { fond: 'rgba(232,18,27,.16)',  trait: 'rgba(232,18,27,.40)',  texte: '#FF7278' },
-  },
-};
-
-/* Thème clair — les mêmes couleurs de statut que le site, à l'identique. */
-const clair: JeuDeCouleurs = {
-  fond: '#F6F7F9',
-  fondHaut: '#FFFFFF',
-  surface: '#FFFFFF',
-  surfaceHaut: '#FFFFFF',
-  bordure: 'rgba(11,12,14,.09)',
-  bordureFranche: 'rgba(11,12,14,.16)',
-  texte: '#0B0C0E',
-  texteDoux: '#5B6470',
-  texteFaible: '#8A929E',
-  accent: MARQUE.rouge,
-  accentTexte: '#FFFFFF',
-  accentDoux: 'rgba(232,18,27,.10)',
-  succes: '#0B7A19',
-  alerte: '#B45309',
-  ombre: '#0B0C0E',
-  statuts: {
-    confirme:   { fond: 'rgba(26,46,210,.10)', trait: 'rgba(26,46,210,.30)', texte: '#1A2ED2' },
-    expedie:    { fond: 'rgba(32,36,42,.09)',  trait: 'rgba(32,36,42,.22)',  texte: '#20242A' },
-    disponible: { fond: 'rgba(19,192,44,.12)', trait: 'rgba(19,192,44,.35)', texte: '#0B7A19' },
-    livre:      { fond: 'rgba(11,122,25,.10)', trait: 'rgba(11,122,25,.30)', texte: '#0B7A19' },
-    action:     { fond: 'rgba(232,18,27,.10)', trait: 'rgba(232,18,27,.30)', texte: '#B60D14' },
   },
 };
 
@@ -113,14 +128,14 @@ export const ESPACE = { xs: 4, s: 8, m: 12, l: 16, xl: 20, xxl: 28, xxxl: 40 } a
 
 export const ARRONDI = { s: 10, m: 14, l: 20, xl: 26, rond: 999 } as const;
 
-/* Ombres portées : discrètes, jamais décoratives. Elles servent à dire
-   « cette carte est au-dessus », pas à faire joli. */
+/* Ombres portées : discrètes, jamais décoratives. Sur le thème clair elles
+   donnent aux cartes et à la barre d'onglets leur flottement de la maquette. */
 export const ombre = (c: JeuDeCouleurs, force: 'douce' | 'forte' = 'douce') => ({
   shadowColor: c.ombre,
-  shadowOpacity: force === 'forte' ? 0.3 : 0.16,
-  shadowRadius: force === 'forte' ? 24 : 12,
-  shadowOffset: { width: 0, height: force === 'forte' ? 10 : 4 },
-  elevation: force === 'forte' ? 10 : 4,
+  shadowOpacity: force === 'forte' ? 0.22 : 0.08,
+  shadowRadius: force === 'forte' ? 24 : 16,
+  shadowOffset: { width: 0, height: force === 'forte' ? 10 : 6 },
+  elevation: force === 'forte' ? 10 : 3,
 });
 
 export type Couleurs = JeuDeCouleurs;

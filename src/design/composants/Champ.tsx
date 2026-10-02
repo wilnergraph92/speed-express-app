@@ -1,3 +1,12 @@
+/* ==========================================================================
+   Le champ de saisie « outlined » de la refonte
+   --------------------------------------------------------------------------
+   Comme sur la maquette de connexion : un contour arrondi posé sur le fond,
+   et l'étiquette en petites capitales qui chevauche la bordure supérieure,
+   découpée par un fond de la même couleur que l'écran. La bordure s'allume
+   en rouge à la saisie : sur n'importe quel fond, c'est le repère qui dit où
+   le doigt a atterri.
+   ========================================================================== */
 import React, { useState } from 'react';
 import { View, TextInput, Pressable, type TextInputProps } from 'react-native';
 import { ARRONDI, ESPACE, POLICES } from '../theme';
@@ -12,18 +21,12 @@ export function Champ({ etiquette, secret, style, ...reste }: Props) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={{ marginBottom: ESPACE.l }}>
-      <Texte variante="etiquette" ton="doux" style={{ marginBottom: 7, marginLeft: 2 }}>
-        {etiquette}
-      </Texte>
+    <View style={{ marginBottom: ESPACE.xl, marginTop: ESPACE.s }}>
       <View style={{
         flexDirection: 'row', alignItems: 'center',
-        backgroundColor: c.surface,
-        /* La bordure s'allume à la saisie : sur un fond très sombre, c'est
-           le seul repère qui dit où le doigt a atterri. */
-        borderColor: actif ? c.accent : c.bordure,
+        borderColor: actif ? c.accent : c.bordureFranche,
         borderWidth: 1.5,
-        borderRadius: ARRONDI.l,
+        borderRadius: ARRONDI.m,
       }}>
         <TextInput
           {...reste}
@@ -42,9 +45,16 @@ export function Champ({ etiquette, secret, style, ...reste }: Props) {
         />
         {secret && (
           <Pressable onPress={() => setVisible((v) => !v)} hitSlop={12} style={{ paddingHorizontal: ESPACE.l }}>
-            <Texte variante="petit" ton="accent">{visible ? '○' : '●'}</Texte>
+            <Texte variante="petit" ton={visible ? 'accent' : 'faible'}>{visible ? '○' : '●'}</Texte>
           </Pressable>
         )}
+      </View>
+      {/* L'étiquette chevauche la bordure, fond raccord avec l'écran. */}
+      <View
+        pointerEvents="none"
+        style={{ position: 'absolute', top: -8, left: 12, backgroundColor: c.fond, paddingHorizontal: 6 }}
+      >
+        <Texte variante="etiquette" ton="doux">{etiquette}</Texte>
       </View>
     </View>
   );
