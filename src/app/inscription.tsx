@@ -13,11 +13,12 @@
 import React, { useState } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { supabase } from '../api/supabase';
 import { useLangue } from '../i18n';
-import { useTheme } from '../design/useTheme';
+import { useTheme, FournisseurTheme } from '../design/useTheme';
 import { ESPACE } from '../design/theme';
 import { Texte } from '../design/composants/Texte';
 import { Champ } from '../design/composants/Champ';
@@ -56,7 +57,13 @@ export default function Inscription() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: c.fond }}>
+    <FournisseurTheme force="light">
+      <View style={{ flex: 1, backgroundColor: c.fond }}>
+      {/* Le halo de la marque, comme sur l'écran de connexion. */}
+      <LinearGradient
+        colors={[...c.halo]}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }}
+      />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: ESPACE.xxl, paddingTop: bords.top + ESPACE.xl }}
@@ -107,6 +114,7 @@ export default function Inscription() {
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+      </View>
+    </FournisseurTheme>
   );
 }

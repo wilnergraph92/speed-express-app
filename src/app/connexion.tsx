@@ -1,27 +1,33 @@
 /* ==========================================================================
    Écran de connexion — la première impression
    --------------------------------------------------------------------------
-   Fond très sombre, dégradé rouge en haut : le logo se détache sans qu'on
-   ait besoin d'un bandeau. Deux champs, un bouton, rien d'autre au premier
-   coup d'œil. Les chemins secondaires (créer un compte, mot de passe oublié)
-   restent accessibles mais ne disputent pas la place au geste principal.
+   Refonte sur le modèle de l'écran de référence : fond blanc, bande latérale
+   rouge sur tout le bord gauche (avec son talon anthracite en bas), logo
+   centré, phrase d'accueil, champs à étiquette sur la bordure, lien
+   « Mot de passe oublié ? » aligné à droite, grand bouton rouge pleine
+   largeur et bascule vers l'inscription. L'écran reste blanc même si le
+   téléphone est en mode sombre : le logo y est posé tel quel, sur son fond
+   d'origine. Le lien de récupération envoie un e-mail qui ramène vers
+   l'espace client du site.
    ========================================================================== */
 import React, { useState } from 'react';
 import { View, Image, ScrollView, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { supabase } from '../api/supabase';
 import { useLangue } from '../i18n';
-import { useTheme } from '../design/useTheme';
+import { useTheme, FournisseurTheme } from '../design/useTheme';
 import { ESPACE, MARQUE } from '../design/theme';
 import { Texte } from '../design/composants/Texte';
 import { Champ } from '../design/composants/Champ';
 import { Bouton } from '../design/composants/Bouton';
 
+const BANDE = 26;
+const RETOUR_SITE = 'https://wilnergraph92.github.io/speed-express-site/espace-client.html';
+
 export default function Connexion() {
-  const { c, sombre } = useTheme();
+  const { c } = useTheme();
   const { t } = useLangue();
   const router = useRouter();
   const bords = useSafeAreaInsets();
@@ -30,9 +36,10 @@ export default function Connexion() {
   const [motDePasse, setMotDePasse] = useState('');
   const [occupe, setOccupe] = useState(false);
   const [erreur, setErreur] = useState('');
+  const [info, setInfo] = useState('');
 
   async function entrer() {
-    setErreur('');
+    setErreur(''); setInfo('');
     setOccupe(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email.trim().toLowerCase(),
@@ -46,30 +53,43 @@ export default function Connexion() {
     /* La redirection est faite par l'aiguillage dès que la session change. */
   }
 
+  /* Récupération : le lien part vers l'adresse saisie et ramène au site. */
+  async function oubli() {
+    setErreur(''); setInfo('');
+    if (!email.trim()) { setErreur(t('emailRequis')); return; }
+    setOccupe(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: RETOUR_SITE,
+    });
+    setOccupe(false);
+    if (error) setErreur(t('erreurGenerale'));
+    else setInfo(t('lienEnvoye'));
+  }
+
   return (
-    <View style={{ flex: 1, backgroundColor: c.fond }}>
-      {/* Lueur rouge en haut d'écran : la marque, sans bandeau. */}
-      <LinearGradient
-        colors={[MARQUE.rouge + '38', MARQUE.rouge + '10', 'transparent']}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 360 }}
-      />
+    <FournisseurTheme force="light">
+      <View style={{ flex: 1, backgroundColor: c.fond }}>
+      {/* La bande latérale rouge, signature de l'écran, et son talon sombre. */}
+      <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: BANDE, backgroundColor: c.accent }} />
+      <View style={{ position: 'absolute', left: 0, bottom: 0, width: BANDE, height: 64, backgroundColor: MARQUE.anthracite }} />
+
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', padding: ESPACE.xxl, paddingTop: bords.top + ESPACE.xxxl }}
+          contentContainerStyle={{
+            flexGrow: 1, justifyContent: 'center',
+            paddingRight: ESPACE.xxl, paddingLeft: BANDE + ESPACE.xxl,
+            paddingTop: bords.top + ESPACE.xxxl, paddingBottom: bords.bottom + ESPACE.xxxl,
+          }}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Le logo d'origine a un texte sombre : il disparaîtrait sur le
-              fond noir. La variante claire ne sert qu'au thème sombre. */}
+          {/* Le logo tel quel, centré : l'écran est toujours blanc. */}
           <Image
-            source={sombre
-              ? require('../../assets/images/ses-logo-sombre.png')
-              : require('../../assets/images/ses-logo.png')}
-            style={{ width: 168, height: 56, resizeMode: 'contain', marginBottom: ESPACE.xxl }}
+            source={require('../../assets/images/ses-logo.png')}
+            style={{ width: 220, height: 86, resizeMode: 'contain', alignSelf: 'center', marginBottom: ESPACE.xxl }}
           />
 
-          <Texte variante="titreXL">{t('bonjour')}</Texte>
-          <Texte variante="corps" ton="doux" style={{ marginTop: 6, marginBottom: ESPACE.xxl }}>
-            {t('sousTitreConnexion')}
+          <Texte variante="corps" ton="doux" style={{ textAlign: 'center', marginBottom: ESPACE.xxl }}>
+            {t('connectezCompte')}
           </Texte>
 
           <Champ
@@ -92,6 +112,18 @@ export default function Connexion() {
             returnKeyType="go"
           />
 
+          <Pressable onPress={oubli} hitSlop={10} style={{ alignSelf: 'flex-end', marginTop: -ESPACE.m, marginBottom: ESPACE.l }}>
+            <Texte variante="corpsFort" ton="accent" style={{ fontSize: 13.5 }}>{t('motDePasseOublie')}</Texte>
+          </Pressable>
+
+          {!!info && (
+            <View style={{
+              backgroundColor: c.statuts.disponible.fond, borderColor: c.statuts.disponible.trait,
+              borderWidth: 1, borderRadius: 14, padding: ESPACE.m, marginBottom: ESPACE.l,
+            }}>
+              <Texte variante="petit" style={{ color: c.statuts.disponible.texte }}>{info}</Texte>
+            </View>
+          )}
           {!!erreur && (
             <View style={{
               backgroundColor: c.statuts.action.fond, borderColor: c.statuts.action.trait,
@@ -111,6 +143,7 @@ export default function Connexion() {
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+      </View>
+    </FournisseurTheme>
   );
 }

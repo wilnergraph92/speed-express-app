@@ -1,5 +1,5 @@
-/* La pastille de statut, aux couleurs exactes du site : un client qui passe
-   du tableau de bord à l'application retrouve le même code visuel. */
+/* La pastille de statut, façon maquette : un fond teinté tout doux, le texte
+   coloré, aucun contour — le code visuel des statuts reste celui du site. */
 import React from 'react';
 import { View } from 'react-native';
 import { ARRONDI, ESPACE } from '../theme';
@@ -15,18 +15,16 @@ export function Badge({ statut, grand }: { statut: string; grand?: boolean }) {
   return (
     <View style={{
       backgroundColor: couleurs.fond,
-      borderColor: couleurs.trait,
-      borderWidth: 1,
       borderRadius: ARRONDI.rond,
-      paddingVertical: grand ? 7 : 4.5,
+      paddingVertical: grand ? 7 : 5,
       paddingHorizontal: grand ? ESPACE.l : ESPACE.m,
       alignSelf: 'flex-start',
     }}>
       <Texte
         variante={grand ? 'corpsFort' : 'petit'}
-        style={{ color: couleurs.texte, fontSize: grand ? 14 : 12.5 }}
+        style={{ color: couleurs.texte, fontSize: grand ? 13.5 : 12 }}
       >
-        {t(statut as Cle)}
+        {t(statut as Cle) || statut}
       </Texte>
     </View>
   );
